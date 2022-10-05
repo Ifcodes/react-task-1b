@@ -50,9 +50,32 @@ export const tokenExpireError = (dispatch, errorMessage) => {
 
 const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const role = localStorage.getItem("role");
+  const token = localStorage.getItem("token");
+
+  const checkToken = async () => {
+    if (role !== null) {
+      try {
+        const response = await sdk.check(role);
+        console.log({ response });
+        tokenExpireError(dispatch, response.message);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   React.useEffect(() => {
     //TODO
+    const data = {
+      ...state,
+      token,
+      role,
+    };
+
+    dispatch({ type: "LOGIN", payload: data });
+
+    checkToken();
   }, []);
 
   return (
