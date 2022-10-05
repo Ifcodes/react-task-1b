@@ -1,15 +1,27 @@
 import React from "react";
+import { useNavigate } from "react-router";
+import { AuthContext } from "../authContext";
 import TableItemCard from "../components/TableItemCard";
 import ArrowVector from "../utils/ArrowVector";
 import UserIcon from "../utils/UserIcon";
 
 const AdminDashboardPage = () => {
+  const { dispatch } = React.useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const logout = () => {
+    navigate("/");
+    dispatch({ type: "LOGOUT" });
+  };
   return (
     <>
       <div className="w-full h-screen bg-[#111111] px-28 pt-6">
         <nav className="flex justify-between items-center">
           <h1 className="text-[3rem] text-white font-black">APP</h1>
-          <button className=" w-max px-6 py-3 rounded-[40px] bg-[#9BFF00] border-none text-base text-[#050505] flex items-center font-[100]">
+          <button
+            className=" w-max px-6 py-3 rounded-[40px] bg-[#9BFF00] border-none text-base text-[#050505] flex items-center font-[100]"
+            onClick={() => logout()}
+          >
             <UserIcon />
             <span className="ml-2">Logout</span>
           </button>
