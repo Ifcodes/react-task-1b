@@ -12,9 +12,19 @@ export default function MkdSDK() {
   this.setTable = function (table) {
     this._table = table;
   };
-  
+
   this.login = async function (email, password, role) {
     //TODO
+    const response = await fetch(this._baseurl + `/v2/api/lambda/login`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        "x-project": base64Encode,
+      },
+      body: JSON.stringify({ email, password, role }),
+    });
+
+    return response.json();
   };
 
   this.getHeader = function () {
@@ -27,7 +37,7 @@ export default function MkdSDK() {
   this.baseUrl = function () {
     return this._baseurl;
   };
-  
+
   this.callRestAPI = async function (payload, method) {
     const header = {
       "Content-Type": "application/json",
@@ -55,7 +65,7 @@ export default function MkdSDK() {
           throw new Error(jsonGet.message);
         }
         return jsonGet;
-      
+
       case "PAGINATE":
         if (!payload.page) {
           payload.page = 1;
@@ -84,10 +94,21 @@ export default function MkdSDK() {
       default:
         break;
     }
-  };  
+  };
 
   this.check = async function (role) {
     //TODO
+    const response = await fetch(this._baseurl + `/v2/api/lambda/check`, {
+      method: "post",
+      body: JSON.stringify({ role }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+        "x-project": base64Encode,
+      },
+    });
+
+    return response.json();
   };
 
   return this;
