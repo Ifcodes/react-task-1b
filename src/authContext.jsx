@@ -15,14 +15,9 @@ const reducer = (state, action) => {
   switch (action.type) {
     case "LOGIN":
       //TODO
-      localStorage.setItem("token", action.payload.token);
-      localStorage.setItem("role", action.payload.role);
+
       return {
         ...state,
-        isAuthenticated: true,
-        user: action.payload.user_id,
-        token: action.payload.token,
-        role: action.payload.role,
       };
     case "LOGOUT":
       localStorage.clear();
@@ -50,32 +45,9 @@ export const tokenExpireError = (dispatch, errorMessage) => {
 
 const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const role = localStorage.getItem("role");
-  const token = localStorage.getItem("token");
-
-  const checkRole = async () => {
-    if (role !== null) {
-      try {
-        const response = await sdk.check(role);
-        console.log({ response });
-        tokenExpireError(dispatch, response.message);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
 
   React.useEffect(() => {
     //TODO
-    const data = {
-      ...state,
-      token,
-      role,
-    };
-
-    dispatch({ type: "LOGIN", payload: data });
-
-    checkRole();
   }, []);
 
   return (
