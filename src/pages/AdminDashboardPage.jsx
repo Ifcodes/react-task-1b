@@ -1,21 +1,92 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { AuthContext } from "../authContext";
 import TableItemCard from "../components/TableItemCard";
 import ArrowVector from "../utils/ArrowVector";
+import MkdSDK from "../utils/MkdSDK";
 import UserIcon from "../utils/UserIcon";
+
+const demoData = [
+  {
+    imgUrl: "../utils/Rectangle1534.png",
+    title: "Rune raises $100,000 for marketing through NFT butterflies sale",
+    authorImgLink: "",
+    authorName: "ninjanft",
+    numberOfLikes: "254",
+  },
+  {
+    imgLink: "../utils/Rectangle1534.png",
+    title: "Rune raises $100,000 for marketing through NFT butterflies sale",
+    authorImgLink: "",
+    authorName: "ninjanft",
+    numberOfLikes: "254",
+  },
+  {
+    imgLink: "../utils/Rectangle1534.png",
+    title: "Rune raises $100,000 for marketing through NFT butterflies sale",
+    authorImgLink: "",
+    authorName: "ninjanft",
+    numberOfLikes: "254",
+  },
+  {
+    imgLink: "../utils/Rectangle1534.png",
+    title: "Rune raises $100,000 for marketing through NFT butterflies sale",
+    authorImgLink: "",
+    authorName: "ninjanft",
+    numberOfLikes: "254",
+  },
+];
 
 const AdminDashboardPage = () => {
   const { dispatch } = React.useContext(AuthContext);
+  const [items, setItems] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageLimit, setPageLimit] = useState();
   const navigate = useNavigate();
 
   const logout = () => {
     navigate("/");
     dispatch({ type: "LOGOUT" });
   };
+
+  const moveListItem = useCallback(
+    (dragIndex, hoverIndex) => {
+      const dragItem = items[dragIndex];
+      const hoverItem = items[hoverIndex];
+      // Swap places of dragItem and hoverItem in the pets array
+      setItems((items) => {
+        const updatedItems = [...items];
+        updatedItems[dragIndex] = hoverItem;
+        updatedItems[hoverIndex] = dragItem;
+        return updatedItems;
+      });
+    },
+    [items]
+  );
+
+  const sdk = new MkdSDK();
+
+  const getVideos = async () => {
+    const data = {
+      payload: {},
+      page: currentPage,
+      limit: pageLimit,
+    };
+
+    const response = await sdk.callRestAPI(data, "PAGINATE");
+    setItems(response.list);
+    console.log({ response });
+  };
+
+  useEffect(() => {
+    console.log({ currentPage });
+    getVideos();
+  }, [currentPage]);
+
   return (
     <>
-      <div className="w-full h-screen bg-[#111111] px-28 pt-6">
+      <div className="w-full  overflow-hidden bg-[#111111] px-28 py-6">
         <nav className="flex justify-between items-center">
           <h1 className="text-[3rem] text-white font-black">APP</h1>
           <button
@@ -60,15 +131,33 @@ const AdminDashboardPage = () => {
             </div>
           </div>
           <div>
-            <TableItemCard
-              number="01"
-              imgLink="../utils/Rectangle1534.png"
-              title="Rune raises $100,000 for marketing through NFT butterflies sale"
-              authorImgLink=""
-              authorName="ninjanft"
-              numberOfLikes="254"
-            />
+            {items.length > 0 &&
+              items.map((data, index) => (
+                <TableItemCard
+                  // index={index}
+                  // moveListItem={moveListItem}
+                  key={index}
+                  number={index + 1}
+                  {...data}
+                />
+              ))}
           </div>
+        </div>
+        <div className="flex justify-end items-center mt-4">
+          <button
+            className=" w-max px-6 py-3 rounded-[40px] bg-[#9BFF00] border-none text-base text-[#050505] flex items-center font-[100] mr-4"
+            onClick={() => {
+              setCurrentPage(currentPage - 1);
+            }}
+          >
+            <span className="ml-2">Preview</span>
+          </button>
+          <button
+            className=" w-max px-6 py-3 rounded-[40px] bg-[#9BFF00] border-none text-base text-[#050505] flex items-center font-[100]"
+            onClick={() => setCurrentPage(currentPage + 1)}
+          >
+            <span className="ml-2">Next</span>
+          </button>
         </div>
       </div>
     </>

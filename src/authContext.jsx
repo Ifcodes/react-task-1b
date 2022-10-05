@@ -58,7 +58,6 @@ const AuthProvider = ({ children }) => {
       try {
         const response = await sdk.check(role);
         console.log({ response });
-
         tokenExpireError(dispatch, response.message);
       } catch (error) {
         console.log(error);
@@ -68,13 +67,14 @@ const AuthProvider = ({ children }) => {
 
   React.useEffect(() => {
     //TODO
-    // const data = {
-    //   ...state,
-    //   token,
-    //   role,
-    // };
-    // dispatch({ type: "LOGIN", payload: data });
-    // checkToken();
+    const data = {
+      ...state,
+      token,
+      role,
+    };
+
+    dispatch({ type: "LOGIN", payload: data });
+    checkToken();
   }, []);
 
   return (
