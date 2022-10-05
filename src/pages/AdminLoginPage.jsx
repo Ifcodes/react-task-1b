@@ -40,6 +40,7 @@ const AdminLoginPage = () => {
       if (response) {
         dispatch({ type: "LOGIN", payload: response });
         navigate("/admin/dashboard");
+        showToast(globalDispatch, "Login successful!");
       }
     } catch (error) {
       setError("email", error.message);
