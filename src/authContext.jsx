@@ -73,8 +73,8 @@ const AuthProvider = ({ children }) => {
       role,
     };
 
-    dispatch({ type: "LOGIN", payload: data });
-    checkToken();
+    // dispatch({ type: "LOGIN", payload: data });
+    // checkToken();
   }, []);
 
   return (

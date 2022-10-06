@@ -134,8 +134,8 @@ const AdminDashboardPage = () => {
             {items.length > 0 &&
               items.map((data, index) => (
                 <TableItemCard
-                  // index={index}
-                  // moveListItem={moveListItem}
+                  index={index}
+                  moveListItem={moveListItem}
                   key={index}
                   number={index + 1}
                   {...data}
